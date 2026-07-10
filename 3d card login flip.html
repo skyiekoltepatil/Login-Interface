@@ -112,14 +112,15 @@
 
       .input-icon {
         position: absolute;
-        top: 13px;
+        top: 50%;
+        transform: translateY(-50%);
         left: 15px;
         color: #ffeba7;
         font-size: 18px;
         transition: 0.3s;
       }
 
-      input {
+      .input-group input {
         width: 100%;
         background-color: rgba(31, 32, 41, 0.6);
         border: 1px solid transparent;
@@ -132,13 +133,13 @@
         outline: none;
       }
 
-      input:focus {
+      .input-group input:focus {
         border-color: #ffeba7;
         background-color: rgba(31, 32, 41, 0.8);
         box-shadow: 0 0 10px rgba(255, 235, 167, 0.2);
       }
 
-      input::placeholder {
+      .input-group input::placeholder {
         color: #c4c3ca;
       }
 
@@ -189,49 +190,7 @@
         text-shadow: 0 0 10px rgba(255, 235, 167, 0.3);
       }
 
-      /* Toast */
-      #toast {
-        visibility: hidden;
-        min-width: 250px;
-        background-color: #ffeba7;
-        color: #102770;
-        text-align: center;
-        border-radius: 8px;
-        padding: 16px;
-        position: fixed;
-        z-index: 100;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-weight: 600;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      }
-      #toast.show {
-        visibility: visible;
-        animation:
-          fadein 0.5s,
-          fadeout 0.5s 2.5s;
-      }
-      @keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-      @keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
+
     </style>
   </head>
   <body>
@@ -316,7 +275,15 @@
       </div>
     </div>
 
-    <div id="toast">Welcome!</div>
+    <!-- Modal Popup -->
+    <div id="modal-popup" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-auto">
+      <div class="bg-[#1f2029] p-8 rounded-2xl shadow-2xl border border-[rgba(255,255,255,0.1)] text-center max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300" id="modal-content">
+        <div class="text-[#ffeba7] text-5xl mb-4" id="modal-icon"><i class="fas fa-check-circle"></i></div>
+        <h3 class="text-2xl font-bold text-white mb-2" id="modal-title">Success</h3>
+        <p class="text-gray-300 mb-6" id="modal-message">Message</p>
+        <button class="bg-[#ffeba7] text-[#102770] font-bold py-2 px-8 rounded-lg hover:bg-white transition-colors shadow-[0_8px_24px_rgba(255,235,167,0.2)] hover:shadow-[0_12px_30px_rgba(255,235,167,0.4)] hover:-translate-y-1 transform duration-300" onclick="closeModal()">OK</button>
+      </div>
+    </div>
 
     <script>
       // --- UI Logic (The 3D Flip) ---
@@ -332,14 +299,30 @@
         cardWrapper.classList.remove("show-signup");
       });
 
-      // --- Mock Backend / Toast Logic ---
-      function showToast(message) {
-        const x = document.getElementById("toast");
-        x.innerText = message;
-        x.className = "show";
-        setTimeout(function () {
-          x.className = x.className.replace("show", "");
-        }, 3000);
+      // --- Modal Popup Logic ---
+      const modalPopup = document.getElementById("modal-popup");
+      const modalContent = document.getElementById("modal-content");
+      const modalTitle = document.getElementById("modal-title");
+      const modalMessage = document.getElementById("modal-message");
+
+      function showModal(title, message) {
+        modalTitle.innerText = title;
+        modalMessage.innerText = message;
+        modalPopup.classList.remove("hidden");
+        // Trigger reflow
+        void modalPopup.offsetWidth;
+        modalPopup.classList.remove("opacity-0");
+        modalContent.classList.remove("scale-95");
+        modalContent.classList.add("scale-100");
+      }
+
+      function closeModal() {
+        modalPopup.classList.add("opacity-0");
+        modalContent.classList.remove("scale-100");
+        modalContent.classList.add("scale-95");
+        setTimeout(() => {
+          modalPopup.classList.add("hidden");
+        }, 300);
       }
 
       document.getElementById("login-form").addEventListener("submit", (e) => {
@@ -349,8 +332,8 @@
         btn.innerText = "Verifying...";
         setTimeout(() => {
           btn.innerText = originalText;
-          showToast("Successfully Logged In!");
-        }, 1500);
+          showModal("Success!", "log in");
+        }, 1000);
       });
 
       document.getElementById("signup-form").addEventListener("submit", (e) => {
@@ -360,9 +343,9 @@
         btn.innerText = "Creating...";
         setTimeout(() => {
           btn.innerText = originalText;
-          showToast("Account Created! Please Log In.");
+          showModal("Success!", "account created");
           cardWrapper.classList.remove("show-signup");
-        }, 1500);
+        }, 1000);
       });
 
       // --- Three.js Background Animation ---

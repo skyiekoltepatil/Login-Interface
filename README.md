@@ -1,6 +1,10 @@
 # 3D Animated Login Interface
 
-![3D Login Interface Demo](image.png)
+<div align="center">
+  <img src="image.png" alt="3D Login Interface Demo" width="800" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</div>
+
+<br />
 
 A beautifully crafted, modern authentication interface featuring an interactive **3D animated background** and a sleek **glassmorphism** UI card with a 3D flip effect.
 
@@ -34,7 +38,7 @@ This project runs completely in the browser and requires no complex build tools 
 
 - **Background Colors**: You can easily change the gradient background colors in the `#canvas-container` CSS block.
 - **3D Lighting**: The neon colors of the 3D scene can be modified in the JavaScript section by updating the hex values of the `THREE.PointLight` objects (currently Purple `#8b5cf6` and Cyan `#06b6d4`).
-- **3D Shapes**: The main glowing shape and particles can be customized by exploring different Three.js geometries (e.g., `THREE.IcosahedronGeometry` or `THREE.SphereGeometry`).
+- **3D Shapes**: The main glowing shape and particles can be customized by exploring different Three.js geometries.
 
 ---
 *Built with modern web standards and a focus on premium aesthetics.*
